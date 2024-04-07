@@ -1,18 +1,27 @@
 #!/usr/bin/python3
-
+import math
 import sys
-from math import sqrt, floor
 
-def is_prime(n):
-    if n < 2:
-        return False
-    for i in range(2, int(sqrt(n)) + 1):
-        if n % i == 0:
-            return False
-    return True
+def factorize(n):
+    factors = []
+    for i in range(2, int(math.sqrt(n)) + 1):
+        while n % i == 0:
+            factors.append(i)
+            n //= i
+    if n > 1:
+        factors.append(n)
+    return factors
 
-def factor(n):
-    for i in range(2, int(sqrt(n)) + 1):
-        if n % i == 0 and is_prime(i) and is_prime(n // i):
-            return i, n // i
-    return n, 1
+def factors_rsa(filename):
+    with open(filename, 'r') as f:
+        num = int(f.readline().strip())
+    primes = factorize(num)
+    print(f"{num}={'*'.join(map(str, primes))}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        sys.exit(1)
+
+    filename = sys.argv[1]
+    factors_rsa(filename)
